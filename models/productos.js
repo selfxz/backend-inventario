@@ -15,8 +15,10 @@ const Producto = sequelize.define("productos", {
         allowNull: false,
         references: {
             model: Categoria,
-            key: "id_categoria",
+            key: "id",
         },
+        onDelete: "SET NULL",
+        onUpdate: "CASCADE"
     },
 }, { timestamps: false });
 
