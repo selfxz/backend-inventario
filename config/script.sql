@@ -70,7 +70,7 @@ IF OBJECT_ID('configuracion', 'U') IS NULL
 CREATE TABLE configuracion (
     id INT IDENTITY(1,1) PRIMARY KEY,
     whatsapp NVARCHAR(20) NOT NULL,
-    mensaje_personalizado NVARCHAR(MAX)
+    mensaje_personalizado NVARCHAR(200)
 );
 GO
 
@@ -100,3 +100,48 @@ CREATE TABLE productos (
         ON DELETE SET NULL
 );
 GO
+
+
+postgressql
+-- Crear base de datos (este paso se suele hacer fuera del script, con permisos adecuados)
+CREATE DATABASE tienda_online;
+
+-- Tabla de Usuarios
+CREATE TABLE IF NOT EXISTS usuarios (
+    id SERIAL PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Tabla de Configuración
+CREATE TABLE IF NOT EXISTS configuracion (
+    id SERIAL PRIMARY KEY,
+    whatsapp VARCHAR(20) NOT NULL,
+    mensaje_personalizado VARCHAR(200)
+);
+
+-- Tabla de Categorías
+CREATE TABLE IF NOT EXISTS categorias (
+    id SERIAL PRIMARY KEY,
+    nombre VARCHAR(100) UNIQUE NOT NULL,
+    descripcion TEXT,
+    creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Tabla de Productos
+CREATE TABLE IF NOT EXISTS productos (
+    id SERIAL PRIMARY KEY,
+    nombre VARCHAR(150) NOT NULL,
+    descripcion TEXT,
+    precio NUMERIC(10,2) NOT NULL,
+    stock INT NOT NULL DEFAULT 0,
+    marca VARCHAR(100) NOT NULL,
+    categoria_id INT,
+    imagen_url VARCHAR(255),
+    creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_categoria FOREIGN KEY (categoria_id)
+        REFERENCES categorias(id)
+        ON DELETE SET NULL
+);
